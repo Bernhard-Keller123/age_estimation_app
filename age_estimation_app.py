@@ -22,6 +22,16 @@ def estimate_age(X_train, y_train, X_val, y_val, methylation_level):
     st.write(f"Validierungsmetriken für Modell: MAE={mae:.2f}, MSE={mse:.2f}, R^2={r2:.2f}")
 
     return predicted_age[0], mae, mse, r2
+    
+# Funktion zum Plotten der Daten
+def plot_data(df, title):
+    plt.figure()
+    plt.scatter(df['B'], df['A'], c='blue')
+    plt.xlabel('Methylierungsgrad')
+    plt.ylabel('Alter')
+    plt.title(title)
+    st.pyplot(plt)
+
 st.title('Altersschätzung basierend auf Methylierungswerten')
 
 uploaded_file1 = st.file_uploader("Bitte wählen Sie die Datei für Protein 1 (ELOVL2) aus.", type=["xlsx"])
@@ -54,3 +64,11 @@ if uploaded_file1 and uploaded_file2 and uploaded_file3:
         age_elovl2, mae_elovl2, mse_elovl2, r2_elovl2 = estimate_age(X_train1, y_train1, X_val1, y_val1, methylation_levels['ELOVL2'])
         age_fhl2, mae_fhl2, mse_fhl2, r2_fhl2 = estimate_age(X_train2, y_train2, X_val2, y_val2, methylation_levels['FHL2'])
         age_penk, mae_penk, mse_penk, r2_penk = estimate_age(X_train3, y_train3, X_val3, y_val3, methylation_levels['PENK'])
+ # Durchschnittliches Alter
+        estimated_age = np.mean([age_elovl2, age_fhl2, age_penk])
+
+        st.write(f"   ")
+        st.write(f"\nELOVL2 geschätztes Alter: {age_elovl2:.2f} Jahre")
+        st.write(f"FHL2 geschätztes Alter: {age_fhl2:.2f} Jahre")
+        st.write(f"PENK geschätztes Alter: {age_penk:.2f} Jahre")
+        st.write(f"Durchschnittlich geschätztes Alter: {estimated_age:.2f} Jahre")
